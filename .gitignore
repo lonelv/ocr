@@ -2,3 +2,4 @@ vendor
 .editorconfig
 tests
 composer.lock
+.idea

@@ -23,6 +23,7 @@ use Godruoyi\OCR\Support\Http;
  * @see  http://ai.baidu.com/docs#/OCR-API/top
  * @see  https://github.com/godruoyi/ocr
  *
+ * @method array animal($images, $options = []) 动物识别
  * @method array generalBasic($images, $options = []) 通用文字识别
  * @method array accurateBasic($images, $options = []) 通用文字识别（高精度版）
  * @method array general($images, $options = []) 通用文字识别（含位置信息版）
@@ -54,28 +55,50 @@ class OCRManager
      */
     protected $supportUrl = true;
 
-    const GENERAL_BASIC    = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic';
-    const ACCURATE_BASIC   = 'https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic';
-    const GENERAL          = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general';
-    const ACCURATE         = 'https://aip.baidubce.com/rest/2.0/ocr/v1/accurate';
+    const ANIMAL = 'https://aip.baidubce.com/rest/2.0/image-classify/v1/animal';
+
+    const GENERAL_BASIC = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic';
+    const ACCURATE_BASIC = 'https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic';
+    const GENERAL = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general';
+    const ACCURATE = 'https://aip.baidubce.com/rest/2.0/ocr/v1/accurate';
     const GENERAL_ENHANCED = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_enhanced';
-    const WEBIMAGE         = 'https://aip.baidubce.com/rest/2.0/ocr/v1/webimage';
-    const IDCARD           = 'https://aip.baidubce.com/rest/2.0/ocr/v1/idcard';
-    const BANKCARD         = 'https://aip.baidubce.com/rest/2.0/ocr/v1/bankcard';
-    const DRIVING_LICENSE  = 'https://aip.baidubce.com/rest/2.0/ocr/v1/driving_license';
-    const VEHICLE_LICENSE  = 'https://aip.baidubce.com/rest/2.0/ocr/v1/vehicle_license';
-    const LICENSE_PLATE    = 'https://aip.baidubce.com/rest/2.0/ocr/v1/license_plate';
+    const WEBIMAGE = 'https://aip.baidubce.com/rest/2.0/ocr/v1/webimage';
+    const IDCARD = 'https://aip.baidubce.com/rest/2.0/ocr/v1/idcard';
+    const BANKCARD = 'https://aip.baidubce.com/rest/2.0/ocr/v1/bankcard';
+    const DRIVING_LICENSE = 'https://aip.baidubce.com/rest/2.0/ocr/v1/driving_license';
+    const VEHICLE_LICENSE = 'https://aip.baidubce.com/rest/2.0/ocr/v1/vehicle_license';
+    const LICENSE_PLATE = 'https://aip.baidubce.com/rest/2.0/ocr/v1/license_plate';
     const BUSINESS_LICENSE = 'https://aip.baidubce.com/rest/2.0/ocr/v1/business_license';
-    const RECEIPT          = 'https://aip.baidubce.com/rest/2.0/ocr/v1/receipt';
+    const RECEIPT = 'https://aip.baidubce.com/rest/2.0/ocr/v1/receipt';
 
     /**
      * Register AccessToken
      *
      * @param AccessToken $accessToken
      */
-    public function __construct(AccessToken $accessToken)
+    public function __construct( AccessToken $accessToken )
     {
         $this->accessToken = $accessToken;
+    }
+
+    /*
+     * 动物识别
+     *
+     * @param  string|\SplFileInfo $images
+     * @param  array $options
+     *
+     * 参数名称	是否必选    	类型	默认值	说明
+        image	    是	    string		图像数据，base64编码，要求base64编码后大小不超过4M，最短边至少15px，最长边最大4096px,支持jpg/png/bmp格式
+        top_num 	否	    integer	6	返回预测得分top结果数，默认为6
+
+     * @throws \RuntimeException
+     *
+     * @return array
+     */
+
+    public function animal( $images, array $options = [] )
+    {
+        return $this->request(self::ANIMAL, $this->buildRequestParam($images, $options));
     }
 
     /**
@@ -104,11 +127,11 @@ class OCRManager
      *
      * @return array
      */
-    public function generalBasic($images, array $options = [])
+    public function generalBasic( $images, array $options = [] )
     {
         $this->supportUrl = true;
 
-        return $this->request(self::GENERAL_BASIC, $this->buildRequestParam($images, $options));
+        return $this->request( self::GENERAL_BASIC, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -126,11 +149,11 @@ class OCRManager
      *
      * @return array
      */
-    public function accurateBasic($images, array $options = [])
+    public function accurateBasic( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::ACCURATE_BASIC, $this->buildRequestParam($images, $options));
+        return $this->request( self::ACCURATE_BASIC, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -162,11 +185,11 @@ class OCRManager
      *
      * @return array
      */
-    public function general($images, array $options = [])
+    public function general( $images, array $options = [] )
     {
         $this->supportUrl = true;
 
-        return $this->request(self::GENERAL, $this->buildRequestParam($images, $options));
+        return $this->request( self::GENERAL, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -187,11 +210,11 @@ class OCRManager
      *
      * @return array
      */
-    public function accurate($images, array $options = [])
+    public function accurate( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::ACCURATE, $this->buildRequestParam($images, $options));
+        return $this->request( self::ACCURATE, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -219,11 +242,11 @@ class OCRManager
      *
      * @return array
      */
-    public function generalEnhanced($images, array $options = [])
+    public function generalEnhanced( $images, array $options = [] )
     {
         $this->supportUrl = true;
 
-        return $this->request(self::GENERAL_ENHANCED, $this->buildRequestParam($images, $options));
+        return $this->request( self::GENERAL_ENHANCED, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -240,11 +263,11 @@ class OCRManager
      *
      * @return array
      */
-    public function webimage($images, array $options = [])
+    public function webimage( $images, array $options = [] )
     {
         $this->supportUrl = true;
 
-        return $this->request(self::WEBIMAGE, $this->buildRequestParam($images, $options));
+        return $this->request( self::WEBIMAGE, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -262,11 +285,11 @@ class OCRManager
      *
      * @return array
      */
-    public function idcard($images, array $options = [])
+    public function idcard( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::IDCARD, $this->buildRequestParam($images, $options));
+        return $this->request( self::IDCARD, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -280,11 +303,11 @@ class OCRManager
      *
      * @return array
      */
-    public function bankcard($images, array $options = [])
+    public function bankcard( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::BANKCARD, $this->buildRequestParam($images, $options));
+        return $this->request( self::BANKCARD, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -300,11 +323,11 @@ class OCRManager
      *
      * @return array
      */
-    public function drivingLicense($images, array $options = [])
+    public function drivingLicense( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::DRIVING_LICENSE, $this->buildRequestParam($images, $options));
+        return $this->request( self::DRIVING_LICENSE, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -322,11 +345,11 @@ class OCRManager
      *
      * @return array
      */
-    public function vehicleLicense($images, array $options = [])
+    public function vehicleLicense( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::VEHICLE_LICENSE, $this->buildRequestParam($images, $options));
+        return $this->request( self::VEHICLE_LICENSE, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -342,11 +365,11 @@ class OCRManager
      *
      * @return array
      */
-    public function licensePlate($images, array $options = [])
+    public function licensePlate( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::LICENSE_PLATE, $this->buildRequestParam($images, $options));
+        return $this->request( self::LICENSE_PLATE, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -360,11 +383,11 @@ class OCRManager
      *
      * @return array
      */
-    public function businessLicense($images, array $options = [])
+    public function businessLicense( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::BUSINESS_LICENSE, $this->buildRequestParam($images, $options));
+        return $this->request( self::BUSINESS_LICENSE, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -378,7 +401,7 @@ class OCRManager
      *
      * @return array
      */
-    public function tableWorld($images, array $options = [])
+    public function tableWorld( $images, array $options = [] )
     {
         //@Todo
     }
@@ -401,11 +424,11 @@ class OCRManager
      *
      * @return array
      */
-    public function receipt($images, array $options = [])
+    public function receipt( $images, array $options = [] )
     {
         $this->supportUrl = false;
 
-        return $this->request(self::RECEIPT, $this->buildRequestParam($images, $options));
+        return $this->request( self::RECEIPT, $this->buildRequestParam( $images, $options ) );
     }
 
     /**
@@ -415,15 +438,15 @@ class OCRManager
      *
      * @return string
      */
-    protected function request($url, array $options = [])
+    protected function request( $url, array $options = [] )
     {
         $httpClient = new Http;
 
         try {
-            $response = $httpClient->request('POST', $url, [
+            $response = $httpClient->request( 'POST', $url, [
                 'form_params' => $options,
-                'query' => [$this->accessToken->getQueryName() => $this->accessToken->getAccessToken(true)]
-            ]);
+                'query'       => [$this->accessToken->getQueryName() => $this->accessToken->getAccessToken( true )]
+            ] );
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             if ($e->hasResponse()) {
                 $response = $e->getResponse();
@@ -433,32 +456,32 @@ class OCRManager
         }
 
 
-        return $httpClient->parseJson($response);
+        return $httpClient->parseJson( $response );
     }
 
     /**
      * Build Request Param
      *
      * @param  string\SplFileInfo $images
-     * @param  array  $options
+     * @param  array $options
      *
      * @return
      */
-    protected function buildRequestParam($images, $options = [])
+    protected function buildRequestParam( $images, $options = [] )
     {
         //Baidu OCR不支持多个url或图片，只支持一次识别一张
-        if (is_array($images) && ! empty($images[0])) {
+        if (is_array( $images ) && !empty( $images[0] )) {
             $images = $images[0];
         }
 
-        if (! $this->supportUrl && FileConverter::isUrl($images)) {
-            throw new RuntimeException('current method not support online picture.');
+        if (!$this->supportUrl && FileConverter::isUrl( $images )) {
+            throw new RuntimeException( 'current method not support online picture.' );
         }
 
-        if ($this->supportUrl && FileConverter::isUrl($images)) {
+        if ($this->supportUrl && FileConverter::isUrl( $images )) {
             $options['url'] = $images;
         } else {
-            $options['image'] = FileConverter::toBase64Encode($images);
+            $options['image'] = FileConverter::toBase64Encode( $images );
         }
 
         return $options;
